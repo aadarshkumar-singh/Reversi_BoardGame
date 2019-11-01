@@ -61,9 +61,9 @@ int testSDCounter()
 
 int testMDCounter()
 {
-	ModuloNDigit c1(2,16) ;
+	ModuloNDigit c1(3,8) ;
 
-	for(int i = 0; i< 256 ; i++ )
+	for(int i = 0; i< 513 ; i++ )
 	{
 		c1.counterMultiDigit();
 		cout << endl;

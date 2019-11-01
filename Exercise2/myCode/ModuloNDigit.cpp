@@ -25,6 +25,13 @@ ModuloNDigit::~ModuloNDigit()
 
 int ModuloNDigit::counterMultiDigit()
 {
+
+	for(int j =m_noOfDigits-1 ; j >= 0; j--)
+	{
+		m_ptr[j].printSD();
+	}
+
+
 	for(int i=0;i<m_noOfDigits;i++)
 	{
 		if(m_ptr[i].countSD() == COUNT_NO_OVERFLOW)
@@ -37,9 +44,5 @@ int ModuloNDigit::counterMultiDigit()
 		}
 	}
 
-	for(int j =m_noOfDigits-1 ; j >= 0; j--)
-	{
-		m_ptr[j].printSD();
-	}
 	return 1 ;
 }
