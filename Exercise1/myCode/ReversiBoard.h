@@ -14,7 +14,7 @@
 enum BoardState_e
 {
 	empty     = '.',
-	available = '?',
+	available = '_',
 	player1   = 'x',
 	player2   = 'o',
 };
@@ -36,6 +36,7 @@ public:
 	BoardState_t queryBoardFieldState(int m , int n);
 	void printBoard();
 	int identifyValidMoves(char player);
+	void makeValidMoves (int urow,int ucol,char player);
 };
 
 #endif /* REVERSIBOARD_H_ */
