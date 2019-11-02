@@ -1,0 +1,5 @@
+Debug/
+*.o
+*.exe
+*.settings/
+*.d
