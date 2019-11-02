@@ -8,98 +8,60 @@
 // Standard (system) header files
 #include <iostream>
 #include <stdlib.h>
-
+#include "ReversiBoard.h"
 
 using namespace std;
 
 // Add your project's header files here
 // #include "CFraction.h"
 
-enum BoardState_e
-{
-	empty     = '.',
-	available = '?',
-	player1   = 'x',
-	player2   = 'o',
-};
 
-typedef BoardState_e BoardState_t ;
+int testQueryBoard(ReversiBoard board);
 
-//query field state
-BoardState_t queryBoardFieldState(int row, int column, char aptr[8][8]);
 
 
 // Main program
 int main (void)
 {
 	cout << "ReversiBoardGame started." << endl << endl;
-
-	BoardState_t fieldState;
-	int row ;
-	int column;
-	char a[8][8];
-
-	for (int i = 0;i <8 ; i++)
-		for (int j=0; j<8;j++)
-		{
-			a[i][j] = empty;
-
-			if ((i==3  && j ==3) || (i==4 && j== 4))
-			{
-				a[i][j] = player1 ;
-			}
-
-			else if ((i==3  && j ==4) || (i==4 && j== 3))
-			{
-				a[i][j] = player2 ;
-			}
-		}
+	int check = 0;
+	ReversiBoard board;
 
 
-	for (int i = 0;i <8 ; i++)
+	check = board.identifyValidMoves('o');
+	board.printBoard();
+	if (check)
 	{
-		for (int j=0; j<8;j++)
-			cout<<a[i][j] <<"\t";
-		cout << endl;
+		cout << "Correct" <<endl;
+
 	}
-
-    cout <<"Enter the row to be queried ";
-    cin >> row ;
-    cout <<"Enter the column to be queried ";
-    cin >> column ;
-
-    fieldState = queryBoardFieldState(row,column,a);
-	cout <<"The state of the field is " << static_cast<char>(fieldState) ;
+	else
+	{
+		cout <<"Something wrong"<<endl;
+	}
+	//testQueryBoard(board);
 
 	return 0;
 }
 
-BoardState_t queryBoardFieldState(int m , int n , char aptr[8][8])
+
+int testQueryBoard(ReversiBoard board)
 {
-	BoardState_t state ;
+	BoardState_t fieldState;
+	int row ;
+	int column;
+	cout <<"Enter the row to be queried ";
+	cin >> row ;
+	cout <<"Enter the column to be queried ";
+	cin >> column ;
 
-	switch(aptr[m][n])
-	{
+	fieldState = board.queryBoardFieldState(row,column);
 
-	case '.':
-		state = empty ;
-		break ;
+	cout <<"The state of the field is " << static_cast<char>(fieldState) ;
 
-	case '?':
-		state = available ;
-		break ;
+	return 1 ;
 
-	case 'x':
-		state = player1 ;
-		break ;
 
-	case 'o':
-		state = player2 ;
-		break ;
-
-	}
-
-	return state ;
 
 }
 
