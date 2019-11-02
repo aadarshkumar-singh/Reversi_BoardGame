@@ -28,7 +28,7 @@ class ReversiBoard
 	char m_validMoves[REVERSIBOARDSIZE][REVERSIBOARDSIZE];
 
 	void initValidMove();
-	void checkEmptyDotValidMove(int vrow, int vcol, char player, int* noOfMoves);
+	void checkEmptyDotValidMove(int nonEmptyRow, int nonEmptyCol, char player, int* noOfMoves);
 
 public:
 	ReversiBoard();

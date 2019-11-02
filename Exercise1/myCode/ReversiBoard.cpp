@@ -132,10 +132,10 @@ int ReversiBoard::identifyValidMoves(char player)
 }
 
 
-void ReversiBoard::checkEmptyDotValidMove(int vrow, int vcol, char player,int* noOfMoves)
+void ReversiBoard::checkEmptyDotValidMove(int nonEmptyRow, int nonEmptyCol, char player,int* noOfMoves)
 {
-	int trow = 0;
-	int tcol = 0;
+	int traverseRow = 0;
+	int traverseCol = 0;
 
 	// get the rival player
 	char rival = (player == 'x')?'o':'x' ;
@@ -146,39 +146,44 @@ void ReversiBoard::checkEmptyDotValidMove(int vrow, int vcol, char player,int* n
 	{
 		for (int colshift =-1 ; colshift <= 1 ; colshift++)
 		{
+			traverseRow = nonEmptyRow + rowshift ;
+			traverseCol = nonEmptyCol + colshift ;
 
-			if (vrow + rowshift < 0 || vrow + rowshift >= REVERSIBOARDSIZE ||
-				vcol + colshift < 0 || vcol + colshift >= REVERSIBOARDSIZE ||
-				(rowshift == 0 && colshift == 0))
+			// Check if while traversing the size of the board overflows
+			// Also check if its the same unfilled box around which we
+			// are checking
+			if ( traverseRow < 0 || traverseRow >= REVERSIBOARDSIZE ||
+				 traverseCol < 0 || traverseCol >= REVERSIBOARDSIZE ||
+				(nonEmptyRow == traverseRow && nonEmptyCol == traverseCol))
 			{
 				continue;
 			}
 			else
 			{
-
-				if (static_cast<char>(m_board[vrow + rowshift][vcol + colshift]) == rival)
+				// Check if rival is present in and around the player
+				if (static_cast<char>(m_board[traverseRow][traverseCol]) == rival)
 				{
-					trow = vrow + rowshift ;
-					tcol = vcol + colshift ;
 
+					// if available keep transversing in the same direction untill board
+					// size overflows or we get empty dot or we get player dot , make
+					// that row and column of board as available.
 					while(1)
 					{
-						trow += rowshift;                  /* Go to next square */
-						tcol += colshift;                  /* in delta direction*/
-						/* Board size overflow , then break  */
-						if(trow < 0 || trow >= REVERSIBOARDSIZE || tcol < 0 || tcol >= REVERSIBOARDSIZE)
+						traverseRow += rowshift;
+						traverseCol += colshift;
+
+						if(traverseRow < 0 || traverseRow >= REVERSIBOARDSIZE || traverseCol < 0 || traverseCol >= REVERSIBOARDSIZE)
 							break;
 
-						/* if found blank square , break */
-						if(m_board[trow][tcol] == empty)
+
+						if(m_board[traverseRow][traverseCol] == empty)
 							break;
 
-						/*  If the dot has player */
-						/*  then we have a valid move */
-						if(static_cast<char>(m_board[trow][tcol]) == player)
+
+						if(static_cast<char>(m_board[traverseRow][traverseCol]) == player)
 						{
 
-							m_validMoves[vrow][vcol] = available;   /* Mark as available */
+							m_validMoves[nonEmptyRow][nonEmptyCol] = available;   /* Mark as available */
 							(*(noOfMoves))++;
 							break;
 						}
