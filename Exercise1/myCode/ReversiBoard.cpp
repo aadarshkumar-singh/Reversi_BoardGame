@@ -262,12 +262,18 @@ void ReversiBoard::makeValidMoves(int urow, int ucol, char player)
 
 						if(static_cast<char>(m_board[traverseRow][traverseCol]) == player)
 						{
+							// move to the next consequtive square and search for rivals
 							traverseRow = traverseRow - rowshift;
 							traverseCol = traverseCol - colshift ;
 
+							// checking if its rival player
 							while(m_board[traverseRow][traverseCol] == rival)
 							{
+								// if rival , then turn to player
 								m_board[traverseRow][traverseCol] = player ;
+								// keep traversing in the same direction untill rival is encountered
+								traverseRow = traverseRow - rowshift;
+								traverseCol = traverseCol - colshift ;
 							}
 							break;
 
@@ -277,6 +283,42 @@ void ReversiBoard::makeValidMoves(int urow, int ucol, char player)
 				}
 			}
 		}
+	}
+
+}
+
+void ReversiBoard::calculateScores(int &p1Score, int &p2Score)
+{
+	p1Score = 0 ;
+	p2Score = 0 ;
+
+	for (int i = 0 ; i< REVERSIBOARDSIZE ;i++)
+	{
+		for (int j = 0 ; j< REVERSIBOARDSIZE ;j++)
+		{
+			if (m_board[i][j] == player1 )
+			{
+				p1Score++ ;
+			}
+			else if (m_board[i][j] == player2)
+			{
+				p2Score++;
+			}
+		}
+	}
+
+	cout << "Player 1 Scored ::" <<p1Score <<endl ;
+	cout << "Player 2 Scored ::" <<p2Score <<endl ;
+
+	if (p1Score > p2Score)
+	{
+		cout << "Winner is player 1 denoted by " <<static_cast<char>(player1)
+			 << "With margin of "<<(p1Score - p2Score)<<endl;
+	}
+	else
+	{
+		cout << "Winner is player 2 denoted by (" <<static_cast<char>(player2)
+			 << "), With margin of "<<(p2Score - p1Score)<<endl;
 	}
 
 }

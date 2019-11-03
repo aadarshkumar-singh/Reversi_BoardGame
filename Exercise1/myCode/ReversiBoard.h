@@ -37,6 +37,7 @@ public:
 	void printBoard();
 	int identifyValidMoves(char player);
 	void makeValidMoves (int urow,int ucol,char player);
+	void calculateScores(int& p1Score , int& p2Score);
 };
 
 #endif /* REVERSIBOARD_H_ */
