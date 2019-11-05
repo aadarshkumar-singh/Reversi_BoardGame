@@ -14,10 +14,10 @@
 #define MODULOOCTALCOUNTER   	 8
 #define MODULOHEXADECIMALCOUNTER 16
 
-enum ModuloNCounterErrCode_e
+enum SingleCounterErrorCode_e
 {
-	R_NOK,
-	R_OK,
+	SINGLECOUNTER_INVALID_MAXCOUNT,
+	SINGLECOUNTER_INIT_SUCCESS,
 };
 
 enum ModuloNCounterOverFlowFlag_e
@@ -26,8 +26,16 @@ enum ModuloNCounterOverFlowFlag_e
 	COUNT_NO_OVERFLOW,
 };
 
+enum ModuloNCounterType_e
+{
+	BINARY_COUNTER = 2 ,
+	OCTAL_COUNTER = 8,
+	DECIMAL_COUNTER = 10 ,
+	HEXADECIMAL_COUNTER =16,
+};
 
-typedef ModuloNCounterErrCode_e ModuloNCounterErrCode_t;
+
+typedef SingleCounterErrorCode_e SingleCounterErrorCode_t;
 
 typedef ModuloNCounterOverFlowFlag_e ModuloNCounterOverFlowFlag_t ;
 
@@ -43,13 +51,15 @@ class ModuloNCounter
 private:
 	int m_curCount;  	  /* Variable to store the current count value of the counter.*/
 	int m_maxCount;  	  /* Variable to store the maximum count till the counter will count.*/
+	SingleCounterErrorCode_t setCounterSD(int countertype);
 
 public:
 
-	ModuloNCounter();
-	ModuloNCounterErrCode_t initCounterSD(int maxCount);
-	ModuloNCounterOverFlowFlag_t  countSD();
-	void printSD();
+	ModuloNCounter(int userEntryCounterType = 10);
+	SingleCounterErrorCode_t initializeSingleDigitCounter(int maxCount);
+	ModuloNCounterOverFlowFlag_t countSingleDigit();
+	ModuloNCounterOverFlowFlag_t operator++();
+	void printSingleDigit();
 };
 
 /**
@@ -58,8 +68,8 @@ public:
  *
  * @param 		counterLimit No of times counter will be executed
  *
- * @return  	R_OK : For valid counterLimit values i.e parameter passed should be > 1
- * 				R_NOK : For invalid parameters
+ * @return  	SINGLECOUNTER_INIT_SUCCESS : For valid counterLimit values i.e parameter passed should be > 1
+ * 				SINGLECOUNTER_INVALID_MAXCOUNT : For invalid parameters
  */
 
 #endif /* MODULONCOUNTER_H_ */
