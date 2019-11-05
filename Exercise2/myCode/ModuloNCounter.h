@@ -51,14 +51,16 @@ class ModuloNCounter
 private:
 	int m_curCount;  	  /* Variable to store the current count value of the counter.*/
 	int m_maxCount;  	  /* Variable to store the maximum count till the counter will count.*/
+	ModuloNCounterOverFlowFlag_t m_overFlowFlag ;
 	SingleCounterErrorCode_t setCounterSD(int countertype);
 
 public:
-
 	ModuloNCounter(int userEntryCounterType = 10);
 	SingleCounterErrorCode_t initializeSingleDigitCounter(int maxCount);
-	ModuloNCounterOverFlowFlag_t countSingleDigit();
+	void countSingleDigit();
+	ModuloNCounterOverFlowFlag_t getSingleCounterOverFlowFlag();
 	ModuloNCounterOverFlowFlag_t operator++();
+	ModuloNCounterOverFlowFlag_t operator++(int postIncrement);
 	void printSingleDigit();
 };
 

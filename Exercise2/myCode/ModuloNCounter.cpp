@@ -13,6 +13,7 @@ using namespace std;
 ModuloNCounter::ModuloNCounter(int userEntryCounterType)
 {
 	m_curCount = 0 ;
+	m_overFlowFlag = COUNT_NO_OVERFLOW ;
 
 	if (setCounterSD(userEntryCounterType) == SINGLECOUNTER_INVALID_MAXCOUNT)
 		cout <<" Counter type not supported , initializing DECIMAL_COUNTER as Default " <<endl ;
@@ -63,9 +64,9 @@ SingleCounterErrorCode_t ModuloNCounter::initializeSingleDigitCounter(int maxCou
 	return errorCode ;
 }
 
-ModuloNCounterOverFlowFlag_t ModuloNCounter::countSingleDigit()
+void ModuloNCounter::countSingleDigit()
 {
-	ModuloNCounterOverFlowFlag_t counterFlag = COUNT_NO_OVERFLOW;
+	m_overFlowFlag = COUNT_NO_OVERFLOW;
 
 	if (m_curCount < (m_maxCount -1))
 	{
@@ -74,10 +75,14 @@ ModuloNCounterOverFlowFlag_t ModuloNCounter::countSingleDigit()
 	else
 	{
 		m_curCount = 0 ;
-		counterFlag = COUNT_OVERFLOW ;
+		m_overFlowFlag = COUNT_OVERFLOW ;
 	}
 
-	return counterFlag ;
+}
+
+ModuloNCounterOverFlowFlag_t ModuloNCounter::getSingleCounterOverFlowFlag()
+{
+	return (m_overFlowFlag);
 }
 
 void ModuloNCounter::printSingleDigit()
@@ -87,6 +92,14 @@ void ModuloNCounter::printSingleDigit()
 
 ModuloNCounterOverFlowFlag_t ModuloNCounter::operator ++()
 {
-	ModuloNCounterOverFlowFlag_t overflowFlag = countSingleDigit();
-	return(overflowFlag);
+	countSingleDigit();
+	return(this->m_overFlowFlag);
 }
+
+ModuloNCounterOverFlowFlag_t ModuloNCounter::operator ++(int postIncrement)
+{
+	ModuloNCounter copySingleCounter = *this ;
+	countSingleDigit();
+	return(copySingleCounter.m_overFlowFlag);
+}
+

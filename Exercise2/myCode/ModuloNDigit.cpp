@@ -67,9 +67,12 @@ DigitCounterErrorCode_t ModuloNDigit::initializeMultiDigitCounter(int noOfDigits
 
 void ModuloNDigit::countMultiDigit()
 {
+
 	for(int i=0;i<m_noOfDigits;i++)
 	{
-		if(++m_digitCounterPtr[i] == COUNT_NO_OVERFLOW)
+		m_digitCounterPtr[i]++ ;
+
+		if(m_digitCounterPtr[i].getSingleCounterOverFlowFlag() == COUNT_NO_OVERFLOW)
 		{
 			break;
 		}
@@ -89,6 +92,11 @@ void ModuloNDigit::printMultiDigit()
 }
 
 void ModuloNDigit::operator ++()
+{
+	countMultiDigit();
+}
+
+void ModuloNDigit::operator ++(int postIncrement)
 {
 	countMultiDigit();
 }

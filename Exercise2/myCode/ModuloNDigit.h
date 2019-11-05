@@ -33,6 +33,7 @@ public:
 	void printMultiDigit();
 	DigitCounterErrorCode_t initializeMultiDigitCounter(int noOfDigits , int counterType);
 	void operator ++();
+	void operator ++(int postIncrement);
 
 };
 

@@ -17,7 +17,7 @@ using namespace std;
 
 
 void testSDCounter();
-int appMDCounter();
+int applicationModuloDigitCounter();
 
 // Main program
 int main (void)
@@ -30,7 +30,7 @@ int main (void)
 	//testSDCounter();
 
 
-	appMDCounter();
+	applicationModuloDigitCounter();
 
 	return 0;
 }
@@ -97,7 +97,7 @@ void testSDCounter()
 
 
 
-int appMDCounter()
+int applicationModuloDigitCounter()
 {
 	int noOfDigits;
 	int counterType ;
@@ -131,7 +131,7 @@ int appMDCounter()
 			for(int i = 0; i< totalCounts ; i++ )
 			{
 					digitCounter.printMultiDigit();
-					++digitCounter;
+					digitCounter++;
 					cout << endl;
 			}
 
