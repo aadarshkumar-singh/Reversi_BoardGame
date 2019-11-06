@@ -16,7 +16,7 @@ using namespace std;
 #include "ModuloNDigit.h"
 
 
-void testSDCounter();
+void testSingleDigitCounter();
 int applicationModuloDigitCounter();
 
 // Main program
@@ -27,17 +27,15 @@ int main (void)
 	cout <<" This program executes Modulo N digit counter "  <<endl;
 	cout <<" ---------------------------------------------" <<endl;
 
-	//testSDCounter();
-
-
+	//testSingleDigitCounter();
 	applicationModuloDigitCounter();
 
 	return 0;
 }
 
-void testSDCounter()
+void testSingleDigitCounter()
 {
-	ModuloNCounter c1;
+	ModuloNCounter singleCounter;
 
 	/**  Number of times the counter should count */
 	int counterLimit = 1;
@@ -69,7 +67,7 @@ void testSDCounter()
 		}
 		else
 		{
-			errorCode = c1.initializeSingleDigitCounter(CounterType);
+			errorCode = singleCounter.initializeSingleDigitCounter(CounterType);
 
 			if (errorCode == SINGLECOUNTER_INVALID_MAXCOUNT)
 			{
@@ -84,8 +82,8 @@ void testSDCounter()
 
 			for( int i = 0; i< totalCounts ; i++ )
 			{
-				c1.printSingleDigit();
-				c1.countSingleDigit();
+				singleCounter.printSingleDigit();
+				singleCounter++;
 				cout<<endl;
 			}
 
