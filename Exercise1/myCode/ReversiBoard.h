@@ -34,10 +34,11 @@ public:
 	ReversiBoard();
 	void createBoard();
 	BoardState_t queryBoardFieldState(int m , int n);
-	void printBoard();
 	int identifyValidMoves(char player);
 	void makeValidMoves (int urow,int ucol,char player);
 	void calculateScores(int& p1Score , int& p2Score);
+	char readBoardElement(int row , int column);
+
 };
 
 #endif /* REVERSIBOARD_H_ */

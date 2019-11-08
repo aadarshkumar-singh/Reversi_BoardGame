@@ -9,6 +9,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include "ReversiBoard.h"
+#include "CReversiConsoleView.h"
 
 using namespace std;
 
@@ -47,7 +48,7 @@ int main (void)
 
 	char playAgain = 'n';
 	ReversiBoard board;
-
+	CReversiConsoleView boardViewobj(&board);
 	do
 	{
 		++noOfGames ; // keep incrementing no of games if user plays again
@@ -69,7 +70,7 @@ int main (void)
 			{
 				if (board.identifyValidMoves(static_cast<char>(player1)))
 				{
-					board.printBoard();
+					boardViewobj.printBoard();
 
 					cout << "Player-1 : turn , denoted by " <<static_cast<char>(player1) << endl ;
 
@@ -97,7 +98,7 @@ int main (void)
 				}
 				else
 				{
-					board.printBoard();
+					boardViewobj.printBoard();
 
 					cout << "no valid moves remaining for Player 1 ("<<static_cast<char>(player1)<<") , Game Over !!!" <<endl;
 					validMoves = 1;
@@ -110,7 +111,7 @@ int main (void)
 			{
 				if (board.identifyValidMoves(static_cast<char>(player2)))
 				{
-					board.printBoard();
+					boardViewobj.printBoard();
 
 					cout << "Player-2 : turn , denoted by " <<static_cast<char>(player2) << endl ;
 
@@ -137,7 +138,7 @@ int main (void)
 				}
 				else
 				{
-					board.printBoard();
+					boardViewobj.printBoard();
 
 					cout << "no valid moves remaining for ("<<static_cast<char>(player2)<<"),Game Over !!!" <<endl;
 					validMoves = 1 ;

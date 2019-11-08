@@ -70,20 +70,6 @@ void ReversiBoard::initValidMove()
 			m_validMoves[i][j] = empty;
 }
 
-
-void ReversiBoard::printBoard()
-{
-
-	for (int i = 0;i <REVERSIBOARDSIZE ; i++)
-	{
-		for (int j=0; j<REVERSIBOARDSIZE;j++)
-			cout<<m_board[i][j] <<"\t";
-		cout << endl;
-	}
-	cout <<endl<<endl ;
-}
-
-
 int ReversiBoard::identifyValidMoves(char player)
 {
 	int noOfmoves = 0;
@@ -313,12 +299,17 @@ void ReversiBoard::calculateScores(int &p1Score, int &p2Score)
 	if (p1Score > p2Score)
 	{
 		cout << "Winner is player 1 denoted by " <<static_cast<char>(player1)
-			 << "With margin of "<<(p1Score - p2Score)<<endl;
+					 << "With margin of "<<(p1Score - p2Score)<<endl;
 	}
 	else
 	{
 		cout << "Winner is player 2 denoted by (" <<static_cast<char>(player2)
-			 << "), With margin of "<<(p2Score - p1Score)<<endl;
+					 << "), With margin of "<<(p2Score - p1Score)<<endl;
 	}
 
+}
+
+char ReversiBoard::readBoardElement(int row, int column)
+{
+	return(m_board[row][column]);
 }
