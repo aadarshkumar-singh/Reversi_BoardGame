@@ -27,13 +27,14 @@ class ModuloNDigit
 public:
 	ModuloNDigit(int noOfDigits = 3, int counterType = 10 );
 	ModuloNDigit(const ModuloNDigit &copyDigitCounter);
+	ModuloNDigit& operator=(const ModuloNDigit &copyFromDigitCounter);
 	~ModuloNDigit();
 
 	/* TODO : add error Handling  */
 	void countMultiDigit();
 	void printMultiDigit();
 	DigitCounterErrorCode_t initializeMultiDigitCounter(int noOfDigits , int counterType);
-	void operator ++();
+	ModuloNDigit operator ++();
 	ModuloNDigit operator ++(int postIncrement);
 
 };

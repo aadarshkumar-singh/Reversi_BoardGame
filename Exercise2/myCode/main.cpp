@@ -129,7 +129,7 @@ int applicationModuloDigitCounter()
 			for(int i = 0; i< totalCounts ; i++ )
 			{
 					digitCounter.printMultiDigit();
-					++digitCounter;
+					digitCounter++;
 					cout << endl;
 			}
 
