@@ -31,6 +31,14 @@ ModuloNDigit::ModuloNDigit(int noOfDigits, int counterType)
 
 }
 
+ModuloNDigit::ModuloNDigit(const ModuloNDigit &copyDigitCounter):m_noOfDigits{copyDigitCounter.m_noOfDigits},
+		m_digitCounterPtr{new ModuloNCounter[copyDigitCounter.m_noOfDigits]}
+{
+	for (int i =0 ; i< m_noOfDigits; i++)
+		m_digitCounterPtr[i]=copyDigitCounter.m_digitCounterPtr[i];
+
+}
+
 ModuloNDigit::~ModuloNDigit()
 {
 	delete[] m_digitCounterPtr ;
@@ -96,7 +104,11 @@ void ModuloNDigit::operator ++()
 	countMultiDigit();
 }
 
-void ModuloNDigit::operator ++(int postIncrement)
+
+
+ModuloNDigit ModuloNDigit::operator ++(int postIncrement)
 {
+	ModuloNDigit tempObj = *this ;
 	countMultiDigit();
+	return tempObj;
 }

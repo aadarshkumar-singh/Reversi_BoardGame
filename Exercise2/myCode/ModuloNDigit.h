@@ -26,6 +26,7 @@ class ModuloNDigit
 
 public:
 	ModuloNDigit(int noOfDigits = 3, int counterType = 10 );
+	ModuloNDigit(const ModuloNDigit &copyDigitCounter);
 	~ModuloNDigit();
 
 	/* TODO : add error Handling  */
@@ -33,7 +34,7 @@ public:
 	void printMultiDigit();
 	DigitCounterErrorCode_t initializeMultiDigitCounter(int noOfDigits , int counterType);
 	void operator ++();
-	void operator ++(int postIncrement);
+	ModuloNDigit operator ++(int postIncrement);
 
 };
 
