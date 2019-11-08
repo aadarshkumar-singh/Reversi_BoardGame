@@ -2,4 +2,5 @@ Debug/
 *.o
 *.exe
 *.settings/
+*.html/
 *.d
