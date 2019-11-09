@@ -11,34 +11,41 @@ using namespace std;
 
 ReversiBoard::ReversiBoard()
 {
+	/*
+	 * Create the Reversi game Board array and initialize valid moves to empty
+	 */
 	initValidMove();
 	createBoard();
 }
 
 void ReversiBoard::createBoard()
 {
+	/*
+	 * Find the center tile and place x and o alternatively
+	 */
+	int findCenter = (REVERSIBOARDSIZE / 2);
+	int findSecondCenter = ((REVERSIBOARDSIZE / 2) - 1);
+
 	for (int i = 0;i <REVERSIBOARDSIZE ; i++)
 		for (int j=0; j<REVERSIBOARDSIZE;j++)
 		{
 			m_board[i][j] = EMPTY;
-
-			if ((i==3  && j ==3) || (i==4 && j== 4))
+			if ((i==findSecondCenter  && j ==findSecondCenter) || (i==findCenter && j== findCenter))
 			{
 				m_board[i][j] = TILE_X ;
 			}
-
-			else if ((i==3  && j ==4) || (i==4 && j== 3))
+			else if ((i==findSecondCenter  && j ==findCenter) || (i==findCenter && j== findSecondCenter))
 			{
 				m_board[i][j] = TILE_O ;
 			}
 		}
 }
 
-BoardState_t ReversiBoard::queryBoardFieldState(int m, int n)
+BoardState_t ReversiBoard::queryBoardFieldState(int row, int column)
 {
 	BoardState_t state ;
 
-	switch(m_board[m][n])
+	switch(m_board[row][column])
 	{
 
 	case '.':
@@ -70,14 +77,18 @@ void ReversiBoard::initValidMove()
 			m_validMoves[i][j] = EMPTY;
 }
 
-int ReversiBoard::identifyValidMoves(char player)
+ValidMovesFlag_t ReversiBoard::identifyValidMoves(char player)
 {
 	int noOfmoves = 0;
 
 	/* initialize valid move array to zero */
 	initValidMove();
 
-
+	/*
+	 * checks if tile is empty, if empty calls check valid move
+	 * to check player can place tile in which all coordinates
+	 * returns valid move is available or not
+	 */
 	for (int row =0 ; row < REVERSIBOARDSIZE ; row++)
 	{
 		for (int col =0 ; col < REVERSIBOARDSIZE ;col++)
@@ -93,6 +104,10 @@ int ReversiBoard::identifyValidMoves(char player)
 		}
 	}
 
+	/*
+	 * If tiles are available for the player to move
+	 * assign tile state to available
+	 */
 	for (int row =0 ; row < REVERSIBOARDSIZE ; row++)
 	{
 		for (int col =0 ; col < REVERSIBOARDSIZE ;col++)
@@ -107,14 +122,12 @@ int ReversiBoard::identifyValidMoves(char player)
 
 	if (noOfmoves)
 	{
-		return 1 ;
+		return VALID_MOVES_AVAILABLE ;
 	}
 	else
 	{
-		return 0 ;
+		return NO_VALID_MOVES ;
 	}
-
-
 }
 
 
@@ -127,7 +140,7 @@ void ReversiBoard::checkValidMove(int nonEmptyRow, int nonEmptyCol, char player,
 	char rival = (player == 'x')?'o':'x' ;
 
 
-	// Check the AVAILABLE options by traversing each row and column
+	// Check the valid moves by traversing along all directions of the given row and column
 	for (int rowshift =-1 ; rowshift <= 1 ; rowshift++)
 	{
 		for (int colshift =-1 ; colshift <= 1 ; colshift++)
@@ -135,9 +148,10 @@ void ReversiBoard::checkValidMove(int nonEmptyRow, int nonEmptyCol, char player,
 			traverseRow = nonEmptyRow + rowshift ;
 			traverseCol = nonEmptyCol + colshift ;
 
-			// Check if while traversing the size of the board overflows
-			// Also check if its the same unfilled box around which we
-			// are checking
+			/*
+			 * Check if while traversing the size of the board overflows, also
+			 * if its the same tile around which we are checking
+			 */
 			if ( traverseRow < 0 || traverseRow >= REVERSIBOARDSIZE ||
 					traverseCol < 0 || traverseCol >= REVERSIBOARDSIZE ||
 					(nonEmptyRow == traverseRow && nonEmptyCol == traverseCol))
@@ -150,9 +164,11 @@ void ReversiBoard::checkValidMove(int nonEmptyRow, int nonEmptyCol, char player,
 				if (static_cast<char>(m_board[traverseRow][traverseCol]) == rival)
 				{
 
-					// if AVAILABLE keep transversing in the same direction untill board
-					// size overflows or we get EMPTY dot or we get player dot , make
-					// that row and column of board as AVAILABLE.
+					/*
+					 * if rival present keep traversing in the same direction untill board
+					 * size overflows or we get EMPTY dot or we get player dot , make
+					 * that row and column of board as AVAILABLE.
+					 */
 					while(1)
 					{
 						traverseRow += rowshift;
@@ -168,8 +184,8 @@ void ReversiBoard::checkValidMove(int nonEmptyRow, int nonEmptyCol, char player,
 
 						if(static_cast<char>(m_board[traverseRow][traverseCol]) == player)
 						{
-
-							m_validMoves[nonEmptyRow][nonEmptyCol] = AVAILABLE;   /* Mark as AVAILABLE */
+							// Populate the valid move array with available state
+							m_validMoves[nonEmptyRow][nonEmptyCol] = AVAILABLE;
 							(*(noOfMoves))++;
 							break;
 						}
@@ -182,14 +198,16 @@ void ReversiBoard::checkValidMove(int nonEmptyRow, int nonEmptyCol, char player,
 
 }
 
-void ReversiBoard::FlipOpponent(int urow, int ucol, char player)
+void ReversiBoard::placeTileOfPlayerAndFlipOpponent(int row, int column, char player)
 {
 	int traverseRow = 0;
 	int traverseCol = 0;
 
-	// Remove the AVAILABLE pieces on the board as after this move we need to set
-	// AVAILABLE pieces again
-
+	/*
+	 * Replace the tiles with available state to empty state
+	 * as available states have to be rechecked after placing the
+	 * tile in the current move
+	 */
 	for (int i = 0 ; i< REVERSIBOARDSIZE ;i++)
 	{
 		for (int j = 0 ; j< REVERSIBOARDSIZE ;j++)
@@ -204,23 +222,24 @@ void ReversiBoard::FlipOpponent(int urow, int ucol, char player)
 	// get the rival player
 	char rival = (player == 'x')?'o':'x' ;
 
-	m_board[urow][ucol] = player ;
+	m_board[row][column] = player ;
 
 
-	// Check the AVAILABLE options by traversing each row and column
+	// Move one tile in all direction and check if rival is present
 	for (int rowshift =-1 ; rowshift <= 1 ; rowshift++)
 	{
 		for (int colshift =-1 ; colshift <= 1 ; colshift++)
 		{
-			traverseRow = urow + rowshift ;
-			traverseCol = ucol + colshift ;
+			traverseRow = row + rowshift ;
+			traverseCol = column + colshift ;
 
-			// Check if while traversing the size of the board overflows
-			// Also check if its the same unfilled box around which we
-			// are checking
+			/*
+			 * Check if while traversing the size of the board overflows, also
+			 * if its the same tile around which we are checking
+			 */
 			if ( traverseRow < 0 || traverseRow >= REVERSIBOARDSIZE ||
 					traverseCol < 0 || traverseCol >= REVERSIBOARDSIZE ||
-					(urow == traverseRow && ucol == traverseCol))
+					(row == traverseRow && column == traverseCol))
 			{
 				continue;
 			}
@@ -230,9 +249,11 @@ void ReversiBoard::FlipOpponent(int urow, int ucol, char player)
 				if (static_cast<char>(m_board[traverseRow][traverseCol]) == rival)
 				{
 
-					// if AVAILABLE keep transversing in the same direction untill board
-					// size overflows or we get EMPTY dot or we get player dot , make
-					// that row and column of board as AVAILABLE.
+					/*
+					 * if rival present keep traversing in the same direction untill board
+					 * size overflows or we get EMPTY dot or we get player dot , Flip the
+					 * all the opponent tile if player dot is encountered
+					 */
 					while(1)
 					{
 						traverseRow += rowshift;
@@ -255,7 +276,7 @@ void ReversiBoard::FlipOpponent(int urow, int ucol, char player)
 							// checking if its rival player
 							while(m_board[traverseRow][traverseCol] == rival)
 							{
-								// if rival , then turn to player
+								// if rival , then turn tile to player
 								m_board[traverseRow][traverseCol] = player ;
 								// keep traversing in the same direction untill rival is encountered
 								traverseRow = traverseRow - rowshift;
@@ -308,7 +329,7 @@ void ReversiBoard::calculateScores()
 	}
 }
 
-char ReversiBoard::readBoardElement(int row, int column)
+char ReversiBoard::getBoardElement(int row, int column)
 {
 	return(m_board[row][column]);
 }

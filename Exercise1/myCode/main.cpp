@@ -20,36 +20,23 @@ using namespace std;
 #include "ReversiBoard.h"
 #include "ReversiConsoleView.h"
 
-
 /**
  * \brief Maximum number of moves possible in 8*8 array
  */
-
 #define MAXIMUM_NUMBER_OF_MOVES 64
-
-/**
- * \brief
- * Defines state of available moves for placing tiles
- */
-enum ValidMovesFlag_e
-{
-	NO_VALID_MOVES,
-	VALID_MOVES_AVAILABLE,
-};
-typedef enum ValidMovesFlag_e ValidMovesFlag_t;
 
 /**
  * Displays the state of board with valid moves and Places the tile as per the players turn
  * in the valid coordinates. Also flips the opponents as per reversi game logic.
  *
- * @param 	isTile 	  			 : is the tile to be placed as per players turn(x/o)
- * @param	board 	  			 : Object of the ReversiBoard Class
- * @param 	boardViewobj		 : Object of the ReversiConsoleView
- * @param 	noOfmoves   		 : Total no of moves played totally
- * @return 	ValidMovesLeft	 	 : VALID_MOVES_AVAILABLE - If valid moves are available
- * 								   NO_VALID_MOVES - If valid moves are not available
+ * @param 	isPlayerTile		   : is the tile to be placed as per players turn(x/o)
+ * @param	board 	  			   : Object of the ReversiBoard Class
+ * @param 	boardViewobj		   : Object of the ReversiConsoleView
+ * @param 	noOfmoves[input/output]: Total no of moves played totally
+ * @return 	ValidMovesLeft	 	   : VALID_MOVES_AVAILABLE - If valid moves are available
+ * 								     NO_VALID_MOVES - If valid moves are not available
  */
-ValidMovesFlag_t placeTile(char isTile ,ReversiBoard& board , ReversiConsoleView& boardViewobj, int& noOfmoves);
+ValidMovesFlag_t getCoordinateFromPlayer(char isPlayerTile ,ReversiBoard& board , ReversiConsoleView& boardViewobj, int& noOfmoves);
 
 // Main program
 int main (void)
@@ -87,13 +74,13 @@ int main (void)
 
 			if(player == PLAYER_TILE_X)
 			{
-				validMovesLeft = placeTile(TILE_X,board,boardViewobj,noOfmoves);
+				validMovesLeft = getCoordinateFromPlayer(TILE_X,board,boardViewobj,noOfmoves);
 				player =PLAYER_TILE_O ;
 			}
 
 			else
 			{
-				validMovesLeft = placeTile(TILE_O,board,boardViewobj,noOfmoves);
+				validMovesLeft = getCoordinateFromPlayer(TILE_O,board,boardViewobj,noOfmoves);
 				player =PLAYER_TILE_X ;
 			}
 
@@ -110,29 +97,20 @@ int main (void)
 }
 
 
-ValidMovesFlag_t placeTile(char isTile ,ReversiBoard& board , ReversiConsoleView& boardViewobj, int& noOfmoves)
+ValidMovesFlag_t getCoordinateFromPlayer(char isPlayerTile ,ReversiBoard& board , ReversiConsoleView& boardViewobj, int& noOfmoves)
 {
 	ValidMovesFlag_t validMovesLeft = VALID_MOVES_AVAILABLE ;
 	int rowChoice = 0 ;
 	int colChoice = 0 ;
-	char identifiedTile ;
-
-	if (isTile == (static_cast<char>(TILE_X)))
-	{
-		identifiedTile = static_cast<char>(TILE_X) ;
-	}
-	else
-	{
-		identifiedTile = static_cast<char>(TILE_O) ;
-	}
+	char playerTile = (static_cast<char>(isPlayerTile)) ;
 
 	// Identify the valid moves
-	if (board.identifyValidMoves(identifiedTile))
+	if (board.identifyValidMoves(playerTile))
 	{
 		// Display the Board with Valid Moves
 		boardViewobj.printBoard();
 
-		cout<<identifiedTile<< " Player's turn " <<endl ;
+		cout<<playerTile<< " Player's turn " <<endl ;
 
 		while(1)
 		{
@@ -150,7 +128,7 @@ ValidMovesFlag_t placeTile(char isTile ,ReversiBoard& board , ReversiConsoleView
 				/*
 				 * Make the move if available , flip the tiles as per Reversi Game Logic
 				 */
-				board.FlipOpponent(rowChoice,colChoice,identifiedTile);
+				board.placeTileOfPlayerAndFlipOpponent(rowChoice,colChoice,playerTile);
 				noOfmoves++ ;
 				break;
 			}
@@ -166,7 +144,7 @@ ValidMovesFlag_t placeTile(char isTile ,ReversiBoard& board , ReversiConsoleView
 		 *  Print the Board and display no more valid moves remaining
 		 */
 		boardViewobj.printBoard();
-		cout << "no valid moves remaining for ("<<identifiedTile<<") , Game Over !!!" <<endl;
+		cout << "no valid moves remaining for ("<<playerTile<<") , Game Over !!!" <<endl;
 		validMovesLeft = NO_VALID_MOVES;
 	}
 

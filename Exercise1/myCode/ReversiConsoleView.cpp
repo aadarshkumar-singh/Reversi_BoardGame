@@ -24,7 +24,7 @@ void ReversiConsoleView::printBoard()
 		cout << i<<"\t";
 		for (int j=0; j<REVERSIBOARDSIZE;j++)
 		{
-			cout<<m_BoardObjView->readBoardElement(i,j) <<"\t";
+			cout<<m_BoardObjView->getBoardElement(i,j) <<"\t";
 		}
 		cout << endl;
 	}
