@@ -20,16 +20,16 @@ void ReversiBoard::createBoard()
 	for (int i = 0;i <REVERSIBOARDSIZE ; i++)
 		for (int j=0; j<REVERSIBOARDSIZE;j++)
 		{
-			m_board[i][j] = empty;
+			m_board[i][j] = EMPTY;
 
 			if ((i==3  && j ==3) || (i==4 && j== 4))
 			{
-				m_board[i][j] = player1 ;
+				m_board[i][j] = TILE_X ;
 			}
 
 			else if ((i==3  && j ==4) || (i==4 && j== 3))
 			{
-				m_board[i][j] = player2 ;
+				m_board[i][j] = TILE_O ;
 			}
 		}
 }
@@ -42,19 +42,19 @@ BoardState_t ReversiBoard::queryBoardFieldState(int m, int n)
 	{
 
 	case '.':
-		state = empty ;
+		state = EMPTY ;
 		break ;
 
 	case '_':
-		state = available ;
+		state = AVAILABLE ;
 		break ;
 
 	case 'x':
-		state = player1 ;
+		state = TILE_X ;
 		break ;
 
 	case 'o':
-		state = player2 ;
+		state = TILE_O ;
 		break ;
 
 	}
@@ -67,7 +67,7 @@ void ReversiBoard::initValidMove()
 {
 	for (int i = 0;i <REVERSIBOARDSIZE ; i++)
 		for (int j=0; j<REVERSIBOARDSIZE;j++)
-			m_validMoves[i][j] = empty;
+			m_validMoves[i][j] = EMPTY;
 }
 
 int ReversiBoard::identifyValidMoves(char player)
@@ -82,13 +82,13 @@ int ReversiBoard::identifyValidMoves(char player)
 	{
 		for (int col =0 ; col < REVERSIBOARDSIZE ;col++)
 		{
-			if (m_board[row][col] != empty)
+			if (m_board[row][col] != EMPTY)
 			{
 				continue ;
 			}
 			else
 			{
-				checkEmptyDotValidMove(row,col,player,&noOfmoves);
+				checkValidMove(row,col,player,&noOfmoves);
 			}
 		}
 	}
@@ -97,9 +97,9 @@ int ReversiBoard::identifyValidMoves(char player)
 	{
 		for (int col =0 ; col < REVERSIBOARDSIZE ;col++)
 		{
-			if (m_validMoves[row][col] == available)
+			if (m_validMoves[row][col] == AVAILABLE)
 			{
-				m_board[row][col] = available;
+				m_board[row][col] = AVAILABLE;
 
 			}
 		}
@@ -118,7 +118,7 @@ int ReversiBoard::identifyValidMoves(char player)
 }
 
 
-void ReversiBoard::checkEmptyDotValidMove(int nonEmptyRow, int nonEmptyCol, char player,int* noOfMoves)
+void ReversiBoard::checkValidMove(int nonEmptyRow, int nonEmptyCol, char player,int* noOfMoves)
 {
 	int traverseRow = 0;
 	int traverseCol = 0;
@@ -127,7 +127,7 @@ void ReversiBoard::checkEmptyDotValidMove(int nonEmptyRow, int nonEmptyCol, char
 	char rival = (player == 'x')?'o':'x' ;
 
 
-	// Check the available options by traversing each row and column
+	// Check the AVAILABLE options by traversing each row and column
 	for (int rowshift =-1 ; rowshift <= 1 ; rowshift++)
 	{
 		for (int colshift =-1 ; colshift <= 1 ; colshift++)
@@ -150,9 +150,9 @@ void ReversiBoard::checkEmptyDotValidMove(int nonEmptyRow, int nonEmptyCol, char
 				if (static_cast<char>(m_board[traverseRow][traverseCol]) == rival)
 				{
 
-					// if available keep transversing in the same direction untill board
-					// size overflows or we get empty dot or we get player dot , make
-					// that row and column of board as available.
+					// if AVAILABLE keep transversing in the same direction untill board
+					// size overflows or we get EMPTY dot or we get player dot , make
+					// that row and column of board as AVAILABLE.
 					while(1)
 					{
 						traverseRow += rowshift;
@@ -162,14 +162,14 @@ void ReversiBoard::checkEmptyDotValidMove(int nonEmptyRow, int nonEmptyCol, char
 							break;
 
 
-						if(m_board[traverseRow][traverseCol] == empty)
+						if(m_board[traverseRow][traverseCol] == EMPTY)
 							break;
 
 
 						if(static_cast<char>(m_board[traverseRow][traverseCol]) == player)
 						{
 
-							m_validMoves[nonEmptyRow][nonEmptyCol] = available;   /* Mark as available */
+							m_validMoves[nonEmptyRow][nonEmptyCol] = AVAILABLE;   /* Mark as AVAILABLE */
 							(*(noOfMoves))++;
 							break;
 						}
@@ -182,21 +182,21 @@ void ReversiBoard::checkEmptyDotValidMove(int nonEmptyRow, int nonEmptyCol, char
 
 }
 
-void ReversiBoard::makeValidMoves(int urow, int ucol, char player)
+void ReversiBoard::FlipOpponent(int urow, int ucol, char player)
 {
 	int traverseRow = 0;
 	int traverseCol = 0;
 
-	// Remove the available pieces on the board as after this move we need to set
-	// available pieces again
+	// Remove the AVAILABLE pieces on the board as after this move we need to set
+	// AVAILABLE pieces again
 
 	for (int i = 0 ; i< REVERSIBOARDSIZE ;i++)
 	{
 		for (int j = 0 ; j< REVERSIBOARDSIZE ;j++)
 		{
-			if (m_board[i][j] == available )
+			if (m_board[i][j] == AVAILABLE )
 			{
-				m_board[i][j] = empty ;
+				m_board[i][j] = EMPTY ;
 			}
 		}
 	}
@@ -207,7 +207,7 @@ void ReversiBoard::makeValidMoves(int urow, int ucol, char player)
 	m_board[urow][ucol] = player ;
 
 
-	// Check the available options by traversing each row and column
+	// Check the AVAILABLE options by traversing each row and column
 	for (int rowshift =-1 ; rowshift <= 1 ; rowshift++)
 	{
 		for (int colshift =-1 ; colshift <= 1 ; colshift++)
@@ -230,9 +230,9 @@ void ReversiBoard::makeValidMoves(int urow, int ucol, char player)
 				if (static_cast<char>(m_board[traverseRow][traverseCol]) == rival)
 				{
 
-					// if available keep transversing in the same direction untill board
-					// size overflows or we get empty dot or we get player dot , make
-					// that row and column of board as available.
+					// if AVAILABLE keep transversing in the same direction untill board
+					// size overflows or we get EMPTY dot or we get player dot , make
+					// that row and column of board as AVAILABLE.
 					while(1)
 					{
 						traverseRow += rowshift;
@@ -242,7 +242,7 @@ void ReversiBoard::makeValidMoves(int urow, int ucol, char player)
 							break;
 
 
-						if(m_board[traverseRow][traverseCol] == empty)
+						if(m_board[traverseRow][traverseCol] == EMPTY)
 							break;
 
 
@@ -273,43 +273,69 @@ void ReversiBoard::makeValidMoves(int urow, int ucol, char player)
 
 }
 
-void ReversiBoard::calculateScores(int &p1Score, int &p2Score)
+void ReversiBoard::calculateScores()
 {
-	p1Score = 0 ;
-	p2Score = 0 ;
+	int tileXscore = 0 ;
+	int tileOscore = 0 ;
 
 	for (int i = 0 ; i< REVERSIBOARDSIZE ;i++)
 	{
 		for (int j = 0 ; j< REVERSIBOARDSIZE ;j++)
 		{
-			if (m_board[i][j] == player1 )
+			if (m_board[i][j] == TILE_X )
 			{
-				p1Score++ ;
+				tileXscore++ ;
 			}
-			else if (m_board[i][j] == player2)
+			else if (m_board[i][j] == TILE_O)
 			{
-				p2Score++;
+				tileOscore++;
 			}
 		}
 	}
 
-	cout << "Player 1 Scored ::" <<p1Score <<endl ;
-	cout << "Player 2 Scored ::" <<p2Score <<endl ;
+	cout << "Total x tiles ::" <<tileXscore <<endl ;
+	cout << "Total o tiles ::" <<tileOscore <<endl ;
 
-	if (p1Score > p2Score)
+	if (tileXscore > tileOscore)
 	{
-		cout << "Winner is player 1 denoted by " <<static_cast<char>(player1)
-					 << "With margin of "<<(p1Score - p2Score)<<endl;
+		cout << "Winner is player denoted by Tile " <<static_cast<char>(TILE_X)
+											 <<" With margin of "<<(tileXscore - tileOscore)<<endl;
 	}
 	else
 	{
-		cout << "Winner is player 2 denoted by (" <<static_cast<char>(player2)
-					 << "), With margin of "<<(p2Score - p1Score)<<endl;
+		cout << "Winner is player denoted by Tile " <<static_cast<char>(TILE_O)
+											 << " With margin of "<<(tileOscore - tileXscore)<<endl;
 	}
-
 }
 
 char ReversiBoard::readBoardElement(int row, int column)
 {
 	return(m_board[row][column]);
 }
+
+PlayerInfo_t ReversiBoard::selectTileToStart()
+{
+	PlayerInfo_t startingPlayer = INVALID_PLAYER;
+	char selectTile ;
+
+	cout <<"Enter first player wants which tile :: x/o"<<endl;
+	cin>>selectTile;
+
+	selectTile = tolower(selectTile);
+
+	if (selectTile == 'x')
+	{
+		startingPlayer = PLAYER_TILE_X;
+	}
+	else if (selectTile == 'o')
+	{
+		startingPlayer = PLAYER_TILE_O;
+	}
+	else
+	{
+		startingPlayer = INVALID_PLAYER;
+	}
+
+	return startingPlayer;
+}
+

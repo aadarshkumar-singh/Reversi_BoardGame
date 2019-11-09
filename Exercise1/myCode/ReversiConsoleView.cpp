@@ -1,5 +1,5 @@
 /*
- * CReversiConsoleView.cpp
+ * ReversiConsoleView.cpp
  *
  *  Created on: Nov 8, 2019
  *      Author: Aadarshxp
@@ -8,19 +8,24 @@
 
 using namespace std;
 
-#include "CReversiConsoleView.h"
+#include "ReversiConsoleView.h"
 
-CReversiConsoleView::CReversiConsoleView(ReversiBoard *boardObjView)
+ReversiConsoleView::ReversiConsoleView(ReversiBoard *boardObjView)
 {
 	m_BoardObjView = boardObjView;
 }
 
-void CReversiConsoleView::printBoard()
+void ReversiConsoleView::printBoard()
 {
+	cout<<endl;
+	cout <<"\t0\t1\t2\t3\t4\t5\t6\t7" <<endl;
 	for (int i = 0;i <REVERSIBOARDSIZE ; i++)
 	{
+		cout << i<<"\t";
 		for (int j=0; j<REVERSIBOARDSIZE;j++)
+		{
 			cout<<m_BoardObjView->readBoardElement(i,j) <<"\t";
+		}
 		cout << endl;
 	}
 	cout <<endl<<endl ;
