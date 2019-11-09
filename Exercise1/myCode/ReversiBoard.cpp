@@ -262,36 +262,33 @@ void ReversiBoard::placeTileOfPlayerAndFlipOpponent(int row, int column, char pl
 						if(traverseRow < 0 || traverseRow >= REVERSIBOARDSIZE || traverseCol < 0 || traverseCol >= REVERSIBOARDSIZE)
 							break;
 
-
 						if(m_board[traverseRow][traverseCol] == EMPTY)
 							break;
 
+						/*
+						 * Implementing the logic to find opponent tiles sandwiched between player tile
+						 */
 
+						// Search till the tile of the same player found
 						if(static_cast<char>(m_board[traverseRow][traverseCol]) == player)
 						{
-							// move to the next consequtive square and search for rivals
+							// Move below in the same directon and flip all untill we get the same tile
 							traverseRow = traverseRow - rowshift;
 							traverseCol = traverseCol - colshift ;
 
-							// checking if its rival player
 							while(m_board[traverseRow][traverseCol] == rival)
 							{
-								// if rival , then turn tile to player
 								m_board[traverseRow][traverseCol] = player ;
-								// keep traversing in the same direction untill rival is encountered
 								traverseRow = traverseRow - rowshift;
 								traverseCol = traverseCol - colshift ;
 							}
 							break;
-
 						}
 					}
-
 				}
 			}
 		}
 	}
-
 }
 
 void ReversiBoard::calculateScores()
@@ -320,12 +317,12 @@ void ReversiBoard::calculateScores()
 	if (tileXscore > tileOscore)
 	{
 		cout << "Winner is player denoted by Tile " <<static_cast<char>(TILE_X)
-											 <<" With margin of "<<(tileXscore - tileOscore)<<endl;
+													 <<" With margin of "<<(tileXscore - tileOscore)<<endl;
 	}
 	else
 	{
 		cout << "Winner is player denoted by Tile " <<static_cast<char>(TILE_O)
-											 << " With margin of "<<(tileOscore - tileXscore)<<endl;
+													 << " With margin of "<<(tileOscore - tileXscore)<<endl;
 	}
 }
 
@@ -359,4 +356,3 @@ PlayerInfo_t ReversiBoard::selectTileToStart()
 
 	return startingPlayer;
 }
-
