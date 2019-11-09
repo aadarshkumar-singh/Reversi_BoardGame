@@ -14,6 +14,9 @@ ModuloNDigit::ModuloNDigit(int noOfDigits, int counterType)
 {
 	DigitCounterErrorCode_t errorCode = MULTIDIGIT_SUCCESS;
 
+	/*
+	 * Initialize with given values, given values are not valid initialize with default
+	 */
 	errorCode = initializeMultiDigitCounter(noOfDigits,counterType);
 
 	if (errorCode != MULTIDIGIT_SUCCESS)
@@ -31,13 +34,19 @@ ModuloNDigit::ModuloNDigit(int noOfDigits, int counterType)
 
 }
 
+/*
+ * Copy Constructor for ModuloNDigit Class
+ */
 ModuloNDigit::ModuloNDigit(const ModuloNDigit &copyDigitCounter):m_noOfDigits{copyDigitCounter.m_noOfDigits},
-						    m_digitCounterPtr{new ModuloNCounter[copyDigitCounter.m_noOfDigits]}
+		m_digitCounterPtr{new ModuloNCounter[copyDigitCounter.m_noOfDigits]}
 {
 	for (int i =0 ; i< m_noOfDigits; i++)
 		m_digitCounterPtr[i]=copyDigitCounter.m_digitCounterPtr[i];
 }
 
+/*
+ * Assignment Overloading for ModuloNDigit Class Objects
+ */
 ModuloNDigit& ModuloNDigit::operator =(const ModuloNDigit &copyFromDigitCounter)
 {
 	delete[] m_digitCounterPtr;
@@ -52,6 +61,9 @@ ModuloNDigit& ModuloNDigit::operator =(const ModuloNDigit &copyFromDigitCounter)
 	return *this;
 }
 
+/*
+ * Destructor of ModuloNDigit Class
+ */
 ModuloNDigit::~ModuloNDigit()
 {
 	delete[] m_digitCounterPtr ;
@@ -62,7 +74,7 @@ DigitCounterErrorCode_t ModuloNDigit::initializeMultiDigitCounter(int noOfDigits
 	DigitCounterErrorCode_t errorCode = MULTIDIGIT_SUCCESS;
 	SingleCounterErrorCode_t errorCodeSingleCounter = SINGLECOUNTER_INIT_SUCCESS;
 
-	if (noOfDigits < 0)
+	if (noOfDigits <= 0)
 	{
 		errorCode = MULTIDIGIT_INVALID_DIGITS_PARAM ;
 	}
@@ -71,6 +83,9 @@ DigitCounterErrorCode_t ModuloNDigit::initializeMultiDigitCounter(int noOfDigits
 		m_noOfDigits = noOfDigits ;
 		m_digitCounterPtr = new ModuloNCounter[noOfDigits];
 
+		/*
+		 * Checks if counter type and digits are valid , if valid assigns otherwise returns error
+		 */
 		for (int i = 0 ; i < m_noOfDigits ;i++ )
 		{
 			errorCodeSingleCounter = m_digitCounterPtr[i].initializeSingleDigitCounter(counterType);
@@ -88,10 +103,15 @@ DigitCounterErrorCode_t ModuloNDigit::initializeMultiDigitCounter(int noOfDigits
 
 void ModuloNDigit::countMultiDigit()
 {
+	/*
+	 * Increment the count by one from LSB to MSB, Checks the overflow flag of each digit ,
+	 * if There is overflow the next digit is incremented by 1.
+	 */
 
 	for(int i=0;i<m_noOfDigits;i++)
 	{
-		m_digitCounterPtr[i]++ ;
+		// Pre-Increment operator overloaded for ModuloNCounter class
+		++m_digitCounterPtr[i] ;
 
 		if(m_digitCounterPtr[i].getSingleCounterOverFlowFlag() == COUNT_NO_OVERFLOW)
 		{
@@ -104,12 +124,62 @@ void ModuloNDigit::countMultiDigit()
 	}
 }
 
+/*
+ * Prints all the digits of Multidigit Object
+ */
 void ModuloNDigit::printMultiDigit()
 {
 	for(int j =m_noOfDigits-1 ; j >= 0; j--)
 	{
 		m_digitCounterPtr[j].printSingleDigit();
 	}
+}
+
+
+DigitCounterErrorCode_t ModuloNDigit::startCount(int countLimit,int countType)
+{
+	DigitCounterErrorCode_t errorCode = MULTIDIGIT_SUCCESS;
+	int formatingStyle = 0 ;
+	int index = 0;
+
+	// As per question, it is asked to format the print
+	if(countType == HEXADECIMAL_COUNTER || countType == BINARY_COUNTER)
+	{
+		formatingStyle = HEXADECIMAL_COUNTER;
+	}
+	else
+	{
+		formatingStyle = countType ;
+	}
+
+
+	/*
+	 * Checks count limit is in range , and invokes multidigit count API and
+	 * print API's
+	 */
+	if (countLimit <= 0 || countLimit > MAXIMUM_POSSIBLE_COUNT)
+	{
+		errorCode = MUTLTIDIGIT_INVALID_COUNT_LIMIT;
+	}
+	else
+	{
+		for(int i = 0; i< countLimit ; i++ )
+		{
+
+			(*this).printMultiDigit();
+			(*this)++; 	//post incremented overloaded for ModuloNdigit
+
+			// Output formating
+			cout << "  ";
+			index++; // for formatting
+			if(index == formatingStyle)
+			{
+				cout <<endl;
+				index = 0;
+			}
+		}
+	}
+	return errorCode;
 }
 
 ModuloNDigit ModuloNDigit::operator ++()

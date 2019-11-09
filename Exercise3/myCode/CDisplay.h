@@ -20,7 +20,7 @@
  * \brief
  * Provides APIs to display the Room temperature sensed by the sensor and
  * the temperature set by the user. It also can displays error messages if any .
- * The property m_display_text is charecter array of size DISPLAY_TEXT_LIMIT
+ * The property m_display_text is char array of size DISPLAY_TEXT_LIMIT
  */
 class CDisplay
 {
