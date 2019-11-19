@@ -123,18 +123,19 @@ ValidMovesFlag_t getCoordinateFromPlayer(char isPlayerTile ,ReversiBoard& board 
 			 */
 			if (rowChoice < 0 || rowChoice > REVERSIBOARDSIZE ||
 					colChoice < 0 || colChoice > REVERSIBOARDSIZE ||
-					board.queryBoardFieldState(rowChoice,colChoice) == AVAILABLE)
+					board.queryBoardFieldState(rowChoice,colChoice) != AVAILABLE)
 			{
+				cout<<"Not a valid move , try again "<<endl ;
+			}
+			else
+			{
+
 				/*
 				 * Make the move if available , flip the tiles as per Reversi Game Logic
 				 */
 				board.placeTileOfPlayerAndFlipOpponent(rowChoice,colChoice,playerTile);
 				noOfmoves++ ;
 				break;
-			}
-			else
-			{
-				cout<<"Not a valid move , try again "<<endl ;
 			}
 		}
 	}
